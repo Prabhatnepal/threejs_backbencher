@@ -1,43 +1,30 @@
-import './style.css'
+import * as THREE from "three";
 
-import * as THREE from 'three';
-
-// create scene
+// create a scene
 const scene = new THREE.Scene();
 
+// create a camera
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000,
+);
 
-//camera
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-const renderer = new THREE.WebGLRenderer({ 
-canvas: document.querySelector('#canvas'),
-});
-
-
-//render 
+// now render the scene using webGL
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-camera.position.z = 30;
+document.body.appendChild(renderer.domElement);
 
-renderer.render(scene, camera);
+//now lets render cube
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
 
-//create geometry
-const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+camera.position.z = 5;
 
-//create material
-const material = new THREE.MeshBasicMaterial({ color: 0xFF6347, wireframe: true });
-const torus = new THREE.Mesh(geometry, material);
-
-//add to scene
-scene.add(torus);
-
-//animation
 function animate() {
-    requestAnimationFrame(animate);
-    torus.rotation.x += 0.01;
-    torus.rotation.y += 0.01;
-    renderer.render(scene, camera);
+  renderer.render(scene, camera);
 }
-animate();
-
-
+renderer.setAnimationLoop(animate);
